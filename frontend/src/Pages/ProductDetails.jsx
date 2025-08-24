@@ -1,16 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { products } from "../data/products";
+import axios from "axios";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState("");
   const [amount, setAmount] = useState(1);
 
-  const product = products.find((p) => p.id === Number(id));
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  // --- FETCH PRODUCT FROM BACKEND ---
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/products/${id}`)
+      .then((res) => {
+        const prod = res.data;
+        // Map image path
+        prod.image = `http://localhost:5000/images/${prod.image}`;
+        setProduct(prod);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching product:", err);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) {
+    return <p className="text-center mt-10">Loading product details...</p>;
+  }
 
   if (!product) {
     return (
@@ -25,8 +48,6 @@ const ProductDetails = () => {
         ? product.company
         : `Company ${product.company}`)
     : "—";
-
-  const isLoggedIn = !!localStorage.getItem("token");
 
   const handleAddToBag = () => {
     const token = localStorage.getItem("token");
@@ -113,7 +134,7 @@ const ProductDetails = () => {
             </select>
           </div>
 
-          {/* Unified CTA Button */}
+          {/* Add to Bag */}
           <button
             onClick={handleAddToBag}
             className={`px-6 py-3 rounded-xl shadow-lg transition text-white ${

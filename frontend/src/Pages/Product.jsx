@@ -1,42 +1,51 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { products } from "../data/products";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 function Product() {
+  const [products, setProducts] = useState([]);
   const [sortOrder, setSortOrder] = useState("a-z");
   const [price, setPrice] = useState(1000);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [companyFilter, setCompanyFilter] = useState("all");
-
-  // Search input (what the user types) vs applied query (what we filter by after pressing SEARCH)
   const [searchInput, setSearchInput] = useState("");
   const [query, setQuery] = useState("");
 
-  const navigate = useNavigate();
   const itemsPerPage = 6;
+
+  // --- FETCH PRODUCTS FROM BACKEND ---
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/products")
+      .then((res) => {
+        // Map image paths
+        const backendProducts = res.data.map((p) => ({
+          ...p,
+          image: `http://localhost:5000/images/${p.image}`,
+        }));
+        setProducts(backendProducts);
+      })
+      .catch((err) => console.error("Error fetching products:", err));
+  }, []);
 
   // --- FILTERING ---
   let filteredProducts = [...products];
 
-  // Apply search only when SEARCH is clicked
   if (query.trim() !== "") {
     filteredProducts = filteredProducts.filter((p) =>
       p.title.toLowerCase().includes(query.toLowerCase())
     );
   }
 
-  // Price
   filteredProducts = filteredProducts.filter((p) => p.price <= Number(price));
 
-  // Category
   if (categoryFilter !== "all") {
     filteredProducts = filteredProducts.filter(
       (p) => p.category.toLowerCase() === categoryFilter.toLowerCase()
     );
   }
 
-  // Company (expects "Company A/B/C")
   if (companyFilter !== "all") {
     filteredProducts = filteredProducts.filter(
       (p) => `Company ${p.company}` === companyFilter
@@ -59,8 +68,8 @@ function Product() {
 
   // --- ACTIONS ---
   const handleSearch = () => {
-    setQuery(searchInput);     // commit the text to the actual filter
-    setCurrentPage(1);         // jump back to page 1
+    setQuery(searchInput);
+    setCurrentPage(1);
   };
 
   const handleReset = () => {
@@ -75,8 +84,6 @@ function Product() {
 
   return (
     <div className="p-6">
-      
-
       {/* Filters */}
       <div className="bg-white p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Search */}
@@ -194,7 +201,8 @@ function Product() {
             <div className="mt-4 text-center">
               <h5 className="font-semibold">{product.title}</h5>
               <p className="text-gray-600 text-sm">{product.description}</p>
-              <h5 className="mt-2 font-bold">{product.price.toFixed(2)} Birr</h5>
+              <h5 className="mt-2 font-bold">{Number(product.price).toFixed(2)} Birr
+</h5>
             </div>
           </Link>
         ))}

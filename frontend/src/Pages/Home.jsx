@@ -1,34 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AvantGardeLamp from "../Assets/AvantGardeLamp.jpg";
-import CoffeTable from "../Assets/CoffeTable.jpg";
-import ComfyBed from "../Assets/ComfyBed.jpg";
-import hotelsofa from "../Assets/hotelsofa.jpg";
-import hoteltv from "../Assets/hoteltv.jpg";
-import hoteltable from "../Assets/hoteltable.jpg";
-
-import { products } from "../data/products";
+import axios from "axios";
 
 function Home() {
-  // Featured product list (by title)
-  const featuredProducts = [
-    { title: "Avant-Garde Lamp", image: AvantGardeLamp },
-    { title: "Comfy Bed", image: ComfyBed },
-    { title: "Coffee Table", image: CoffeTable },
-  ].map((product) => {
-    const matchedProduct = products.find((p) => p.title === product.title);
-    return {
-      ...product,
-      id: matchedProduct?.id || 0,
-      price: matchedProduct?.price?.toFixed(2) || "0.00",
-    };
-  });
+  const [products, setProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+
+  // Fetch products from backend
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/products")
+      .then((res) => {
+        setProducts(res.data);
+
+        // Pick featured products by title
+        const featuredTitles = ["Avant-Garde Lamp", "Comfy Bed", "Coffee Table"];
+        const featured = res.data
+  .filter((p) => featuredTitles.includes(p.title))
+  .map((p) => ({
+    id: p.id,
+    title: p.title,
+    image: `http://localhost:5000/images/${p.image}`,
+    price: Number(p.price).toFixed(2), // <- convert to number first
+  }));
+
+        setFeaturedProducts(featured);
+      })
+      .catch((err) => console.error("Error fetching products:", err));
+  }, []);
 
   return (
     <div>
       {/* Hero Section */}
       <section className="w-full px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        {/* Text Content */}
         <div>
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">
             We are changing <br />
@@ -45,10 +49,10 @@ function Home() {
 
         {/* Images Scroll */}
         <div className="flex space-x-6 overflow-x-auto p-4 rounded-xl border border-gray-700 bg-gray-800 scroll-smooth scrollbar-thin scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-400 transition-all duration-300">
-          {[hotelsofa, hoteltable, hoteltv].map((img, i) => (
+          {["hotelsofa.jpg", "hoteltable.jpg", "hoteltv.jpg"].map((img, i) => (
             <img
               key={i}
-              src={img}
+              src={`http://localhost:5000/images/${img}`}
               alt={`hotel-${i}`}
               className="w-[300px] h-[400px] rounded-2xl object-cover border-4 border-gray-600 hover:scale-105 transition-transform duration-500"
             />

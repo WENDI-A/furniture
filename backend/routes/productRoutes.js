@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const productController = require("../controllers/productController");
 
-// Temporary test route
-router.get("/", (req, res) => {
-  res.send("Product route works");
-});
+// GET all products
+router.get("/", productController.getAllProducts);
 
-module.exports = router; // ✅ must export router
+// GET single product by ID
+router.get("/:id", productController.getProductById);
+
+module.exports = router;
