@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { getImageUrl } from "@/lib/utils";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -16,13 +17,13 @@ function Home() {
         // Pick featured products by title
         const featuredTitles = ["Avant-Garde Lamp", "Comfy Bed", "Coffee Table"];
         const featured = res.data
-  .filter((p) => featuredTitles.includes(p.title))
-  .map((p) => ({
-    id: p.id,
-    title: p.title,
-    image: `http://localhost:5000/images/${p.image}`,
-    price: Number(p.price).toFixed(2), // <- convert to number first
-  }));
+          .filter((p) => featuredTitles.includes(p.title))
+          .map((p) => ({
+            id: p.id,
+            title: p.title,
+            image: getImageUrl(p.image),
+            price: Number(p.price).toFixed(2),
+          }));
 
         setFeaturedProducts(featured);
       })
@@ -52,7 +53,7 @@ function Home() {
           {["hotelsofa.jpg", "hoteltable.jpg", "hoteltv.jpg"].map((img, i) => (
             <img
               key={i}
-              src={`http://localhost:5000/images/${img}`}
+              src={getImageUrl(img)}
               alt={`hotel-${i}`}
               className="w-[300px] h-[400px] rounded-2xl object-cover border-4 border-gray-600 hover:scale-105 transition-transform duration-500"
             />

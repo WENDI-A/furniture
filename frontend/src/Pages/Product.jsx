@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { getImageUrl } from "@/lib/utils";
 
 function Product() {
   const [products, setProducts] = useState([]);
@@ -22,7 +23,7 @@ function Product() {
         // Map image paths
         const backendProducts = res.data.map((p) => ({
           ...p,
-          image: `http://localhost:5000/images/${p.image}`,
+          image: getImageUrl(p.image),
         }));
         setProducts(backendProducts);
       })

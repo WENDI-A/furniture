@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { getImageUrl } from "@/lib/utils";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -21,7 +22,7 @@ const ProductDetails = () => {
       .then((res) => {
         const prod = res.data;
         // Map image path
-        prod.image = `http://localhost:5000/images/${prod.image}`;
+        prod.image = getImageUrl(prod.image);
         setProduct(prod);
         setLoading(false);
       })
@@ -49,11 +50,18 @@ const ProductDetails = () => {
         : `Company ${product.company}`)
     : "—";
 
-  const handleAddToBag = () => {
+  const handleAddToBag = async () => {
     const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
 
     if (!token) {
-      navigate("/login", { state: { from: location.pathname } });
+      navigate("/signin", { state: { from: location.pathname } });
+      return;
+    }
+
+    if (!userId) {
+      alert("User ID not found. Please sign in again.");
+      navigate("/signin");
       return;
     }
 
@@ -62,14 +70,31 @@ const ProductDetails = () => {
       return;
     }
 
-    // Add to cart logic
-    console.log("Added to bag:", {
-      id: product.id,
-      title: product.title,
-      selectedColor,
-      amount,
-    });
-    alert(`${product.title} added to your bag!`);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/cart/add",
+        {
+          userId: parseInt(userId),
+          productId: parseInt(product.id),
+          quantity: amount,
+          color: selectedColor
+        },
+        {
+          headers: { Authorization: token }
+        }
+      );
+
+      alert(`${product.title} added to your bag!`);
+      
+      // Optionally redirect to cart or stay on page
+      if (window.confirm("Item added to cart! Would you like to view your cart?")) {
+        navigate("/cart");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      const errorMessage = error.response?.data?.error || "Failed to add item to cart";
+      alert(`Error: ${errorMessage}`);
+    }
   };
 
   return (

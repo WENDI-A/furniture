@@ -20,11 +20,11 @@ export default function Signin() {
 
       console.log("Login successful:", res.data);
 
-      // ✅ Save token
+      // ✅ Save token and userId
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userId", res.data.userId);
 
       // ✅ Save first name for Navbar
-      // Assuming your backend returns user's full name in res.data.name
       const fullName = res.data.name || email.split("@")[0]; // fallback to email
       const firstName = fullName.split(" ")[0];
       localStorage.setItem("user", JSON.stringify({ firstName }));

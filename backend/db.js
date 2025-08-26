@@ -1,15 +1,23 @@
 const mysql = require("mysql2");
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "furniture"
+// Use a pooled connection to avoid 'closed state' errors and handle concurrency
+const pool = mysql.createPool({
+	host: "localhost",
+	user: "root",
+	password: "",
+	database: "furniture",
+	waitForConnections: true,
+	connectionLimit: 10,
+	queueLimit: 0
 });
 
-db.connect(function(err) {
-  if (err) throw err;
-  else console.log("Connected!");
+pool.getConnection((err, connection) => {
+	if (err) {
+		console.error("MySQL connection error:", err);
+		return;
+	}
+	console.log("Connected!");
+	connection.release();
 });
 
-module.exports = db;
+module.exports = pool;

@@ -7,6 +7,8 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const addressRoutes = require("./routes/addressRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -21,5 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/addresses", addressRoutes);
+app.use("/api/users", userRoutes);
 
 app.listen(5000, () => console.log("Backend running on port 5000"));

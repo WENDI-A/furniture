@@ -7,7 +7,12 @@ import About from "./Pages/About";
 import ProductDetails from "./Pages/ProductDetails";
 import Signin from "./Pages/Signin";
 import Register from "./Pages/Register";
-import Navbar from "./Components/Navbar"; // <-- import Navbar
+import Cart from "./Pages/Cart";
+import Checkout from "./Pages/Checkout";
+import UserProfile from "./Pages/UserProfile";
+import OrderHistory from "./Pages/OrderHistory";
+import AddressManagement from "./Pages/AddressManagement";
+import Navbar from "./components/Navbar"; // <-- import Navbar
 import "./App.css";
 
 function AppWrapper() {
@@ -28,6 +33,12 @@ function AppWrapper() {
         <Route path="/product" element={<Product />} />
         <Route path="/about" element={<About />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/orders" element={<OrderHistory />} />
+        <Route path="/orders/:orderId" element={<OrderHistory />} />
+        <Route path="/addresses" element={<AddressManagement />} />
       </Routes>
     </div>
   );
