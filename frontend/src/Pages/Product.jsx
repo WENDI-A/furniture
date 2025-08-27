@@ -84,9 +84,9 @@ function Product() {
   };
 
   return (
-    <div className="p-6">
+    <div className="min-h-screen p-6 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
       {/* Filters */}
-      <div className="bg-white p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Search */}
         <div>
           <h5 className="font-semibold mb-2">Search Product</h5>
@@ -95,7 +95,7 @@ function Product() {
             placeholder="Search"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full border rounded p-2"
+            className="w-full border rounded p-2 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
           />
           <div className="mt-4">
             <h5 className="font-semibold mb-2">Select Price</h5>
@@ -115,7 +115,7 @@ function Product() {
               }}
               className="w-full mt-2"
             />
-            <span className="text-sm">Max: $1,000</span>
+            <span className="text-sm text-gray-600 dark:text-gray-300">Max: $1,000</span>
           </div>
         </div>
 
@@ -123,7 +123,7 @@ function Product() {
         <div>
           <h5 className="font-semibold mb-2">Select Category</h5>
           <select
-            className="w-full border rounded p-2"
+            className="w-full border rounded p-2 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
             value={categoryFilter}
             onChange={(e) => {
               setCategoryFilter(e.target.value);
@@ -142,7 +142,7 @@ function Product() {
         <div>
           <h5 className="font-semibold mb-2">Select Company</h5>
           <select
-            className="w-full border rounded p-2"
+            className="w-full border rounded p-2 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
             value={companyFilter}
             onChange={(e) => {
               setCompanyFilter(e.target.value);
@@ -170,7 +170,7 @@ function Product() {
               setSortOrder(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full border rounded p-2"
+            className="w-full border rounded p-2 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="a-z">a-z</option>
             <option value="z-a">z-a</option>
@@ -192,7 +192,7 @@ function Product() {
           <Link
             key={product.id}
             to={`/product/${product.id}`}
-            className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
+            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
           >
             <img
               src={product.image}
@@ -201,7 +201,7 @@ function Product() {
             />
             <div className="mt-4 text-center">
               <h5 className="font-semibold">{product.title}</h5>
-              <p className="text-gray-600 text-sm">{product.description}</p>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">{product.description}</p>
               <h5 className="mt-2 font-bold">{Number(product.price).toFixed(2)} Birr
 </h5>
             </div>

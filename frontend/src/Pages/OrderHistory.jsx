@@ -13,6 +13,7 @@ import {
   MapPin
 } from "lucide-react";
 import axios from "axios";
+import { getImageUrl } from "@/lib/utils";
 
 const OrderHistory = () => {
   const navigate = useNavigate();
@@ -41,9 +42,22 @@ const OrderHistory = () => {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/orders/user/${userId}`, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}` }
       });
-      setOrders(response.data);
+      const data = response.data;
+      const IMAGE_FIXES = {
+        "LoungChair.jpg": "LoungeChair.jpg",
+        "StramlinedTable.jpg": "StreamlinedTable.jpg",
+        "CoffeTable.jpg": "Coffee Table.jpg"
+      };
+      const normalized = data.map(order => ({
+        ...order,
+        items: order.items.map(it => ({
+          ...it,
+          image: getImageUrl(IMAGE_FIXES[it.image] || it.image)
+        }))
+      }));
+      setOrders(normalized);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -54,9 +68,19 @@ const OrderHistory = () => {
   const fetchOrderDetails = async (id) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/orders/${id}?userId=${userId}`, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}` }
       });
-      setSelectedOrder(response.data);
+      const IMAGE_FIXES = {
+        "LoungChair.jpg": "LoungeChair.jpg",
+        "StramlinedTable.jpg": "StreamlinedTable.jpg",
+        "CoffeTable.jpg": "Coffee Table.jpg"
+      };
+      const details = response.data;
+      details.items = details.items.map(it => ({
+        ...it,
+        image: getImageUrl(IMAGE_FIXES[it.image] || it.image)
+      }));
+      setSelectedOrder(details);
       setShowOrderDetails(true);
       setLoading(false);
     } catch (error) {
@@ -122,10 +146,10 @@ const OrderHistory = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Loading orders...</p>
+          <p className="text-lg text-gray-600 dark:text-gray-300">Loading orders...</p>
         </div>
       </div>
     );
@@ -134,7 +158,7 @@ const OrderHistory = () => {
   // Show order details if viewing a specific order
   if (showOrderDetails && selectedOrder) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-8">
@@ -153,7 +177,7 @@ const OrderHistory = () => {
           </div>
 
           {/* Order Status */}
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">Order Status</h2>
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedOrder.order_status)}`}>
@@ -176,7 +200,7 @@ const OrderHistory = () => {
           </div>
 
           {/* Order Items */}
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6 mb-6">
             <h2 className="text-xl font-semibold mb-4">Order Items</h2>
             <div className="space-y-4">
               {selectedOrder.items.map((item, index) => (
@@ -205,7 +229,7 @@ const OrderHistory = () => {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6 mb-6">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -242,7 +266,7 @@ const OrderHistory = () => {
 
           {/* Shipping Information */}
           {selectedOrder.shipping_info && (
-            <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -270,7 +294,7 @@ const OrderHistory = () => {
           )}
 
           {/* Payment Summary */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-4">Payment Summary</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
@@ -306,16 +330,16 @@ const OrderHistory = () => {
 
   // Show order list
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Order History</h1>
-          <p className="text-gray-600 mt-2">Track your orders and view order details</p>
+          <p className="text-gray-600 dark:text-gray-300 mt-2">Track your orders and view order details</p>
         </div>
 
         {orders.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-12 text-center">
             <ShoppingBag className="w-24 h-24 mx-auto mb-6 text-gray-300" />
             <h2 className="text-2xl font-bold text-gray-700 mb-4">No Orders Yet</h2>
             <p className="text-gray-500 mb-6">Start shopping to see your order history here.</p>
@@ -329,7 +353,7 @@ const OrderHistory = () => {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <div key={order.id} className="bg-white rounded-lg shadow-sm border p-6">
+              <div key={order.id} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">

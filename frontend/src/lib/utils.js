@@ -14,5 +14,7 @@ export function getApiBaseUrl() {
 
 export function getImageUrl(fileName) {
   if (!fileName) return `${getApiBaseUrl()}/images/react.svg`;
-  return `${getApiBaseUrl()}/images/${fileName}`;
+  // Encode the filename to safely handle spaces and special characters
+  const safeName = encodeURIComponent(fileName);
+  return `${getApiBaseUrl()}/images/${safeName}`;
 }

@@ -51,7 +51,7 @@ const Checkout = () => {
   const fetchCart = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/cart/${userId}`, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setCart(response.data);
     } catch (error) {
@@ -63,7 +63,7 @@ const Checkout = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/addresses/user/${userId}`, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setAddresses(response.data);
       
@@ -137,7 +137,7 @@ const Checkout = () => {
         "http://localhost:5000/api/orders/create",
         orderData,
         {
-          headers: { Authorization: token }
+          headers: { Authorization: `Bearer ${token}` }
         }
       );
 

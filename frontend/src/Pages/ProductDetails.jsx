@@ -80,7 +80,7 @@ const ProductDetails = () => {
           color: selectedColor
         },
         {
-          headers: { Authorization: token }
+          headers: { Authorization: `Bearer ${token}` }
         }
       );
 

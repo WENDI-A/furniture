@@ -37,7 +37,8 @@ exports.login = (req, res) => {
 		const match = await bcrypt.compare(password, user.password);
 		if (!match) return res.status(400).json({ message: "Wrong password" });
 
-		const token = jwt.sign({ id: user.id }, "SECRET_KEY", { expiresIn: "1h" });
+		const secret = process.env.JWT_SECRET || "SECRET_KEY";
+		const token = jwt.sign({ id: user.id }, secret, { expiresIn: "1h" });
 		res.json({ token, userId: user.id, name: user.first_name || user.name });
 	});
 };

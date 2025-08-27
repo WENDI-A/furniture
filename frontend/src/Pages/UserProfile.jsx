@@ -93,7 +93,6 @@ const UserProfile = () => {
         }
       );
 
-      // Update local user state
       setUser({
         ...user,
         first_name: editForm.firstName,
@@ -101,8 +100,6 @@ const UserProfile = () => {
         phone: editForm.phone
       });
 
-      // Update localStorage
-      const storedUser = JSON.parse(localStorage.getItem("user"));
       const firstName = editForm.firstName.split(" ")[0];
       localStorage.setItem("user", JSON.stringify({ firstName }));
 
@@ -203,28 +200,28 @@ const UserProfile = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Loading profile...</p>
+          <p className="text-lg text-gray-600 dark:text-gray-300">Loading profile...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">My Account</h1>
-          <p className="text-gray-600 mt-2">Manage your profile and preferences</p>
+          <p className="text-gray-600 dark:text-gray-300 mt-2">Manage your profile and preferences</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar Navigation */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border p-6">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6">
               <nav className="space-y-2">
                 <button
                   onClick={() => setActiveTab("profile")}
@@ -278,7 +275,7 @@ const UserProfile = () => {
           <div className="lg:col-span-3">
             {/* Profile Tab */}
             {activeTab === "profile" && (
-              <div className="bg-white rounded-lg shadow-sm border p-6">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold">Profile Information</h2>
                   {!isEditing ? (
@@ -312,7 +309,7 @@ const UserProfile = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       First Name
                     </label>
                     {isEditing ? (
@@ -320,15 +317,15 @@ const UserProfile = () => {
                         type="text"
                         value={editForm.firstName}
                         onChange={(e) => setEditForm({ ...editForm, firstName: e.target.value })}
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     ) : (
-                      <p className="p-3 bg-gray-50 rounded-lg">{user.first_name}</p>
+                      <p className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">{user.first_name}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Last Name
                     </label>
                     {isEditing ? (
@@ -336,25 +333,25 @@ const UserProfile = () => {
                         type="text"
                         value={editForm.lastName}
                         onChange={(e) => setEditForm({ ...editForm, lastName: e.target.value })}
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     ) : (
-                      <p className="p-3 bg-gray-50 rounded-lg">{user.last_name}</p>
+                      <p className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">{user.last_name}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Email
                     </label>
-                    <p className="p-3 bg-gray-50 rounded-lg flex items-center gap-2">
+                    <p className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center gap-2">
                       <Mail className="w-4 h-4 text-gray-400" />
                       {user.email}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Phone
                     </label>
                     {isEditing ? (
@@ -362,10 +359,10 @@ const UserProfile = () => {
                         type="tel"
                         value={editForm.phone}
                         onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     ) : (
-                      <p className="p-3 bg-gray-50 rounded-lg flex items-center gap-2">
+                      <p className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center gap-2">
                         <Phone className="w-4 h-4 text-gray-400" />
                         {user.phone || "Not provided"}
                       </p>
@@ -373,10 +370,10 @@ const UserProfile = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Member Since
                     </label>
-                    <p className="p-3 bg-gray-50 rounded-lg flex items-center gap-2">
+                    <p className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-gray-400" />
                       {formatDate(user.created_at)}
                     </p>
@@ -384,7 +381,7 @@ const UserProfile = () => {
                 </div>
 
                 {/* Account Actions */}
-                <div className="mt-8 pt-6 border-t">
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
                   <h3 className="text-lg font-medium mb-4">Account Actions</h3>
                   <div className="space-y-3">
                     <button
@@ -405,22 +402,22 @@ const UserProfile = () => {
                 </div>
 
                 {/* Statistics */}
-                <div className="mt-8 pt-6 border-t">
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
                   <h3 className="text-lg font-medium mb-4">Account Statistics</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
+                    <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg">
                       <div className="text-2xl font-bold text-blue-600">{stats.total_orders || 0}</div>
                       <div className="text-sm text-gray-600">Total Orders</div>
                     </div>
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
+                    <div className="text-center p-4 bg-green-50 dark:bg-green-950/30 rounded-lg">
                       <div className="text-2xl font-bold text-green-600">${stats.total_spent || "0.00"}</div>
                       <div className="text-sm text-gray-600">Total Spent</div>
                     </div>
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
+                    <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/30 rounded-lg">
                       <div className="text-2xl font-bold text-purple-600">{stats.wishlist_count || 0}</div>
                       <div className="text-sm text-gray-600">Wishlist Items</div>
                     </div>
-                    <div className="text-center p-4 bg-yellow-50 rounded-lg">
+                    <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg">
                       <div className="text-2xl font-bold text-yellow-600">{stats.review_count || 0}</div>
                       <div className="text-sm text-gray-600">Reviews</div>
                     </div>
@@ -431,9 +428,9 @@ const UserProfile = () => {
 
             {/* Orders Tab */}
             {activeTab === "orders" && (
-              <div className="bg-white rounded-lg shadow-sm border p-6">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6">
                 <h2 className="text-xl font-semibold mb-6">Order History</h2>
-                <p className="text-gray-600 mb-4">View and track your orders</p>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">View and track your orders</p>
                 <button
                   onClick={() => navigate("/orders")}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -445,7 +442,7 @@ const UserProfile = () => {
 
             {/* Addresses Tab */}
             {activeTab === "addresses" && (
-              <div className="bg-white rounded-lg shadow-sm border p-6">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold">My Addresses</h2>
                   <button
@@ -460,7 +457,7 @@ const UserProfile = () => {
                 {addresses.length === 0 ? (
                   <div className="text-center py-8">
                     <MapPin className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                    <p className="text-gray-600 mb-4">No addresses found</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">No addresses found</p>
                     <button
                       onClick={() => navigate("/addresses")}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -471,7 +468,7 @@ const UserProfile = () => {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {addresses.slice(0, 4).map((address) => (
-                      <div key={address.id} className="p-4 border rounded-lg">
+                      <div key={address.id} className="p-4 border rounded-lg border-gray-200 dark:border-gray-800">
                         <div className="flex items-start justify-between mb-2">
                           <div className="font-medium">
                             {address.first_name} {address.last_name}
@@ -482,7 +479,7 @@ const UserProfile = () => {
                             </span>
                           )}
                         </div>
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-gray-600 dark:text-gray-300">
                           {address.address_line1}
                           {address.address_line2 && <br />}
                           {address.address_line2}
@@ -503,18 +500,18 @@ const UserProfile = () => {
 
             {/* Activity Tab */}
             {activeTab === "activity" && (
-              <div className="bg-white rounded-lg shadow-sm border p-6">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6">
                 <h2 className="text-xl font-semibold mb-6">Recent Activity</h2>
                 
                 {activity.length === 0 ? (
                   <div className="text-center py-8">
                     <Star className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                    <p className="text-gray-600">No recent activity</p>
+                    <p className="text-gray-600 dark:text-gray-300">No recent activity</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {activity.slice(0, 10).map((item, index) => (
-                      <div key={index} className="flex items-center gap-4 p-4 border rounded-lg">
+                      <div key={index} className="flex items-center gap-4 p-4 border rounded-lg border-gray-200 dark:border-gray-800">
                         {getActivityIcon(item.type)}
                         <div className="flex-1">
                           <div className="font-medium">
@@ -522,14 +519,14 @@ const UserProfile = () => {
                             {item.type === 'review' && `Reviewed ${item.product_name}`}
                             {item.type === 'wishlist' && `Added ${item.product_name} to wishlist`}
                           </div>
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-gray-600 dark:text-gray-300">
                             {formatDate(item.activity_date)}
                           </div>
                         </div>
                         {item.type === 'order' && (
                           <div className="text-right">
                             <div className="font-medium">${item.total_amount}</div>
-                            <div className="text-sm text-gray-600">{item.order_status}</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-300">{item.order_status}</div>
                           </div>
                         )}
                         {item.type === 'review' && (
@@ -556,46 +553,46 @@ const UserProfile = () => {
 
       {/* Password Change Modal */}
       {showPasswordModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
             <h3 className="text-lg font-semibold mb-4">Change Password</h3>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Current Password
                 </label>
                 <input
                   type="password"
                   value={passwordForm.currentPassword}
                   onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter current password"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   New Password
                 </label>
                 <input
                   type="password"
                   value={passwordForm.newPassword}
                   onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter new password"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Confirm New Password
                 </label>
                 <input
                   type="password"
                   value={passwordForm.confirmPassword}
                   onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Confirm new password"
                 />
               </div>
@@ -623,4 +620,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile; 
+export default UserProfile;

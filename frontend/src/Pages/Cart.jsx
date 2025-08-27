@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from "lucide-react";
+import { getImageUrl } from "@/lib/utils";
 
 const Cart = () => {
   const [cart, setCart] = useState({ cartItems: [], summary: { subtotal: 0, tax: 0, total: 0, itemCount: 0 } });
@@ -23,9 +24,19 @@ const Cart = () => {
   const fetchCart = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/cart/${userId}`, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}` }
       });
-      setCart(response.data);
+      const data = response.data;
+      const IMAGE_FIXES = {
+        "LoungChair.jpg": "LoungeChair.jpg",
+        "StramlinedTable.jpg": "StreamlinedTable.jpg",
+        "CoffeTable.jpg": "Coffee Table.jpg"
+      };
+      const items = data.cartItems.map((it) => ({
+        ...it,
+        image: getImageUrl(IMAGE_FIXES[it.image] || it.image)
+      }));
+      setCart({ ...data, cartItems: items });
       setLoading(false);
       
       // Update cart count in localStorage for navbar
@@ -48,7 +59,7 @@ const Cart = () => {
     try {
       await axios.put(`http://localhost:5000/api/cart/item/${cartItemId}`, 
         { quantity: newQuantity },
-        { headers: { Authorization: token } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       await fetchCart(); // Refresh cart data
     } catch (error) {
@@ -64,7 +75,7 @@ const Cart = () => {
     
     try {
       await axios.delete(`http://localhost:5000/api/cart/item/${cartItemId}`, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}` }
       });
       await fetchCart(); // Refresh cart data
     } catch (error) {
@@ -78,7 +89,7 @@ const Cart = () => {
     
     try {
       await axios.delete(`http://localhost:5000/api/cart/${userId}`, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setCart({ cartItems: [], summary: { subtotal: 0, tax: 0, total: 0, itemCount: 0 } });
     } catch (error) {
@@ -93,10 +104,10 @@ const Cart = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <div className="text-center">
           <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-gray-400 animate-pulse" />
-          <p className="text-lg text-gray-600">Loading your cart...</p>
+          <p className="text-lg text-gray-600 dark:text-gray-300">Loading your cart...</p>
         </div>
       </div>
     );
@@ -104,11 +115,11 @@ const Cart = () => {
 
   if (cart.cartItems.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <div className="text-center">
           <ShoppingBag className="w-24 h-24 mx-auto mb-6 text-gray-300" />
-          <h2 className="text-2xl font-bold text-gray-700 mb-4">Your cart is empty</h2>
-          <p className="text-gray-500 mb-6">Looks like you haven't added any items yet.</p>
+          <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-200 mb-4">Your cart is empty</h2>
+          <p className="text-gray-500 dark:text-gray-300 mb-6">Looks like you haven't added any items yet.</p>
           <button
             onClick={() => navigate("/product")}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
@@ -121,7 +132,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -148,7 +159,7 @@ const Cart = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm">
               {cart.cartItems.map((item) => (
                 <div key={item.id} className="p-6 border-b last:border-b-0">
                   <div className="flex items-start gap-4">
@@ -219,15 +230,15 @@ const Cart = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-8">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6 sticky top-8">
               <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
               
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-600 dark:text-gray-300">
                   <span>Subtotal ({cart.summary.itemCount} items)</span>
                   <span>${cart.summary.subtotal}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-600 dark:text-gray-300">
                   <span>Tax (15%)</span>
                   <span>${cart.summary.tax}</span>
                 </div>

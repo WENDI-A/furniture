@@ -8,6 +8,7 @@ import {
   Trash2, 
   Star, 
   Home, 
+  Truck,
   Building,
   User,
   Phone,
@@ -51,7 +52,7 @@ const AddressManagement = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/addresses/user/${userId}`, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setAddresses(response.data);
       setLoading(false);
@@ -117,7 +118,7 @@ const AddressManagement = () => {
             isDefault: formData.isDefault
           },
           {
-            headers: { Authorization: token }
+            headers: { Authorization: `Bearer ${token}` }
           }
         );
         alert("Address updated successfully!");
@@ -141,7 +142,7 @@ const AddressManagement = () => {
             isDefault: formData.isDefault
           },
           {
-            headers: { Authorization: token }
+            headers: { Authorization: `Bearer ${token}` }
           }
         );
         alert("Address added successfully!");
@@ -182,7 +183,7 @@ const AddressManagement = () => {
 
     try {
       await axios.delete(`http://localhost:5000/api/addresses/${addressId}`, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}` }
       });
       alert("Address deleted successfully!");
       fetchAddresses();
@@ -198,7 +199,7 @@ const AddressManagement = () => {
         `http://localhost:5000/api/addresses/${addressId}/default`,
         { userId: parseInt(userId) },
         {
-          headers: { Authorization: token }
+          headers: { Authorization: `Bearer ${token}` }
         }
       );
       alert("Default address updated successfully!");
@@ -237,28 +238,28 @@ const AddressManagement = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Loading addresses...</p>
+          <p className="text-lg text-gray-600 dark:text-gray-300">Loading addresses...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Address Management</h1>
-          <p className="text-gray-600 mt-2">Manage your billing and shipping addresses</p>
+          <p className="text-gray-600 dark:text-gray-300 mt-2">Manage your billing and shipping addresses</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Address List */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border p-6">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold">My Addresses</h2>
                 <button
@@ -273,8 +274,8 @@ const AddressManagement = () => {
               {addresses.length === 0 ? (
                 <div className="text-center py-12">
                   <MapPin className="w-24 h-24 mx-auto mb-6 text-gray-300" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-4">No addresses yet</h3>
-                  <p className="text-gray-500 mb-6">Add your first address to get started with checkout.</p>
+                  <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">No addresses yet</h3>
+                  <p className="text-gray-500 dark:text-gray-300 mb-6">Add your first address to get started with checkout.</p>
                   <button
                     onClick={() => setShowAddForm(true)}
                     className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -285,7 +286,7 @@ const AddressManagement = () => {
               ) : (
                 <div className="space-y-4">
                   {addresses.map((address) => (
-                    <div key={address.id} className="border rounded-lg p-4">
+                    <div key={address.id} className="border rounded-lg p-4 border-gray-200 dark:border-gray-800">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">
                           {getAddressTypeIcon(address.address_type)}
@@ -293,10 +294,10 @@ const AddressManagement = () => {
                             <div className="font-medium">
                               {address.first_name} {address.last_name}
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-gray-600 dark:text-gray-300">
                               {getAddressTypeLabel(address.address_type)}
                               {address.is_default && (
-                                <span className="ml-2 inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                <span className="ml-2 inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 text-xs rounded-full">
                                   <Star className="w-3 h-3 fill-current" />
                                   Default
                                 </span>
@@ -308,7 +309,7 @@ const AddressManagement = () => {
                           {!address.is_default && (
                             <button
                               onClick={() => handleSetDefault(address.id)}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors"
                               title="Set as default"
                             >
                               <Star className="w-4 h-4" />
@@ -316,14 +317,14 @@ const AddressManagement = () => {
                           )}
                           <button
                             onClick={() => handleEdit(address)}
-                            className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                            className="p-2 text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             title="Edit address"
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(address.id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors"
                             title="Delete address"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -331,7 +332,7 @@ const AddressManagement = () => {
                         </div>
                       </div>
 
-                      <div className="text-sm text-gray-600 space-y-1">
+                      <div className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                         {address.company && <div>{address.company}</div>}
                         <div>{address.address_line1}</div>
                         {address.address_line2 && <div>{address.address_line2}</div>}
@@ -354,14 +355,14 @@ const AddressManagement = () => {
           {/* Add/Edit Form */}
           {showAddForm && (
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-8">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm p-6 sticky top-8">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold">
                     {editingAddress ? 'Edit Address' : 'Add New Address'}
                   </h2>
                   <button
                     onClick={resetForm}
-                    className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -370,14 +371,14 @@ const AddressManagement = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Address Type */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Address Type
                     </label>
                     <select
                       name="addressType"
                       value={formData.addressType}
                       onChange={handleInputChange}
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="both">Billing & Shipping</option>
                       <option value="billing">Billing Only</option>
@@ -388,7 +389,7 @@ const AddressManagement = () => {
                   {/* Name Fields */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         First Name *
                       </label>
                       <input
@@ -397,11 +398,11 @@ const AddressManagement = () => {
                         value={formData.firstName}
                         onChange={handleInputChange}
                         required
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Last Name *
                       </label>
                       <input
@@ -410,14 +411,14 @@ const AddressManagement = () => {
                         value={formData.lastName}
                         onChange={handleInputChange}
                         required
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
                   </div>
 
                   {/* Company */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Company (Optional)
                     </label>
                     <input
@@ -425,13 +426,13 @@ const AddressManagement = () => {
                       name="company"
                       value={formData.company}
                       onChange={handleInputChange}
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
                   {/* Address Lines */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Address Line 1 *
                     </label>
                     <input
@@ -440,12 +441,12 @@ const AddressManagement = () => {
                       value={formData.addressLine1}
                       onChange={handleInputChange}
                       required
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Address Line 2 (Optional)
                     </label>
                     <input
@@ -453,14 +454,14 @@ const AddressManagement = () => {
                       name="addressLine2"
                       value={formData.addressLine2}
                       onChange={handleInputChange}
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
                   {/* City, State, Postal Code */}
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         City *
                       </label>
                       <input
@@ -469,11 +470,11 @@ const AddressManagement = () => {
                         value={formData.city}
                         onChange={handleInputChange}
                         required
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         State *
                       </label>
                       <input
@@ -482,11 +483,11 @@ const AddressManagement = () => {
                         value={formData.state}
                         onChange={handleInputChange}
                         required
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Postal Code *
                       </label>
                       <input
@@ -495,14 +496,14 @@ const AddressManagement = () => {
                         value={formData.postalCode}
                         onChange={handleInputChange}
                         required
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
                   </div>
 
                   {/* Country */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Country *
                     </label>
                     <input
@@ -511,13 +512,13 @@ const AddressManagement = () => {
                       value={formData.country}
                       onChange={handleInputChange}
                       required
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
                   {/* Phone */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Phone (Optional)
                     </label>
                     <input
@@ -525,7 +526,7 @@ const AddressManagement = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
@@ -539,7 +540,7 @@ const AddressManagement = () => {
                       onChange={handleInputChange}
                       className="text-blue-600"
                     />
-                    <label htmlFor="isDefault" className="text-sm text-gray-700">
+                    <label htmlFor="isDefault" className="text-sm text-gray-700 dark:text-gray-300">
                       Set as default address
                     </label>
                   </div>
@@ -562,4 +563,4 @@ const AddressManagement = () => {
   );
 };
 
-export default AddressManagement; 
+export default AddressManagement;

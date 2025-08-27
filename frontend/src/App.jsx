@@ -22,7 +22,7 @@ function AppWrapper() {
   const showNavbar = !["/signin", "/register", "/createaccount"].includes(location.pathname);
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
       {showNavbar && <Navbar />} {/* <-- render Navbar */}
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
