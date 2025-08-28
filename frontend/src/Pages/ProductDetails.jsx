@@ -151,7 +151,7 @@ const ProductDetails = () => {
             <select
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
-              className="border border-gray-300 rounded-lg p-2 w-32"
+              className="border border-gray-300 rounded-lg p-2 w-32 bg-gray-900"
             >
               {Array.from({ length: 20 }, (_, i) => i + 1).map((n) => (
                 <option key={n} value={n}>{n}</option>

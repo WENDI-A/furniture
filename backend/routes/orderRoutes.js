@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const orderController = require("../controllers/orderController");
 const authMiddleware = require("../middlewares/authMiddleware");
+const requireAdmin = require("../middlewares/adminMiddleware");
 
 // Apply auth middleware to all order routes
 router.use(authMiddleware);
@@ -16,7 +17,7 @@ router.get("/user/:userId", orderController.getUserOrders);
 router.get("/:orderId", orderController.getOrderDetails);
 
 // Update order status (admin function)
-router.put("/:orderId/status", orderController.updateOrderStatus);
+router.put("/:orderId/status", requireAdmin, orderController.updateOrderStatus);
 
 // Cancel order
 router.put("/:orderId/cancel", orderController.cancelOrder);
