@@ -8,6 +8,7 @@ import axios from "axios";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
   const [cartCount, setCartCount] = useState(0);
   const [theme, setTheme] = useState("light");
   const location = useLocation();
@@ -56,8 +57,13 @@ const Navbar = () => {
   // Load user from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    const storedRole = localStorage.getItem("userRole");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsed = JSON.parse(storedUser);
+      setUser(parsed);
+      setRole(parsed.role || storedRole || null);
+    } else if (storedRole) {
+      setRole(storedRole);
     }
   }, []);
 
@@ -99,6 +105,7 @@ const Navbar = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("userRole");
     setUser(null);
     setCartCount(0);
     navigate("/signin");
@@ -125,6 +132,18 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
+
+          {role === 'admin' && (
+            <Link
+              to="/admin"
+              className={cn(
+                "hover:text-blue-600 dark:hover:text-blue-400 transition-colors",
+                location.pathname === "/admin" && "text-blue-600 dark:text-blue-400 font-medium"
+              )}
+            >
+              Admin
+            </Link>
+          )}
 
           {/* Theme toggle */}
           <button
@@ -243,6 +262,19 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
+
+          {user && role === 'admin' && (
+            <Link
+              to="/admin"
+              className={cn(
+                "block text-sm hover:text-blue-600 dark:hover:text-blue-400",
+                location.pathname === "/admin" && "text-blue-600 dark:text-blue-400 font-medium"
+              )}
+              onClick={() => setIsOpen(false)}
+            >
+              Admin
+            </Link>
+          )}
 
           {user ? (
             <div className="flex items-center gap-3 mt-3">

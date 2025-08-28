@@ -38,7 +38,8 @@ exports.login = (req, res) => {
 		if (!match) return res.status(400).json({ message: "Wrong password" });
 
 		const secret = process.env.JWT_SECRET || "SECRET_KEY";
-		const token = jwt.sign({ id: user.id }, secret, { expiresIn: "1h" });
-		res.json({ token, userId: user.id, name: user.first_name || user.name });
+		const role = user.role || (user.is_admin ? 'admin' : 'user') || 'user';
+		const token = jwt.sign({ id: user.id, role }, secret, { expiresIn: "1h" });
+		res.json({ token, userId: user.id, name: user.first_name || user.name, role });
 	});
 };

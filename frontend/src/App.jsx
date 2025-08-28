@@ -14,6 +14,7 @@ import OrderHistory from "./Pages/OrderHistory";
 import AddressManagement from "./Pages/AddressManagement";
 import Navbar from "./components/Navbar"; // <-- import Navbar
 import "./App.css";
+import Admin from "./Pages/Admin";
 
 function AppWrapper() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function AppWrapper() {
         <Route path="/orders" element={<OrderHistory />} />
         <Route path="/orders/:orderId" element={<OrderHistory />} />
         <Route path="/addresses" element={<AddressManagement />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </div>
   );

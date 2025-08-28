@@ -20,14 +20,15 @@ export default function Signin() {
 
       console.log("Login successful:", res.data);
 
-      // ✅ Save token and userId
+      // ✅ Save token, userId and role
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId);
+      localStorage.setItem("userRole", res.data.role || "user");
 
-      // ✅ Save first name for Navbar
+      // ✅ Save first name and role for Navbar
       const fullName = res.data.name || email.split("@")[0]; // fallback to email
       const firstName = fullName.split(" ")[0];
-      localStorage.setItem("user", JSON.stringify({ firstName }));
+      localStorage.setItem("user", JSON.stringify({ firstName, role: res.data.role || "user" }));
 
       alert("Login successful!");
 
@@ -41,7 +42,7 @@ export default function Signin() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto mt-20 p-6 bg-black-900 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold mb-6">Login</h2>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <Input
